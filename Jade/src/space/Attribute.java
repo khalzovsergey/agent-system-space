@@ -3,22 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package space.monitors;
-
-import jade.core.Agent;
+package space;
 
 /**
  *
  * @author Sergey
  */
-public class MonitorAgent extends Agent
+public class Attribute<T>
 {
-    protected void setup()
-    {
-    }
-    
-    protected void takeDown()
-    {
-        System.exit(0);
-    }
+    public T value;
 }

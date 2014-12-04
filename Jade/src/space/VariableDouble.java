@@ -3,23 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package space.planets;
+package space;
 
 /**
  *
  * @author Sergey
  */
-public class Resource
+public class VariableDouble
 {
-    private double value = 0.0;
-    private String name = "";
+    public double value;
     
-    public double getValue()
+    public VariableDouble()
     {
-        return value;
+        this.value = 0.0;
     }
     
-    public void setValue(double value)
+    public VariableDouble(double value)
     {
         this.value = value;
     }
