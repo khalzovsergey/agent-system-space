@@ -33,8 +33,8 @@ public class PlanetAgent extends Agent
         List<Civilization> civilizations = new ArrayList<>();
         Civilization civilization = new Civilization();
         Map<String, Object> civilization_attributes = civilization.getAttributes();
-        civilization_attributes.put("name", "PGH1");
-        civilization_attributes.put("number", new VariableDouble(100));
+        civilization_attributes.put("name", "SLT1");
+        civilization_attributes.put("number", new VariableDouble(99));
         civilization_attributes.put("birth_rate", new VariableDouble(0.001));
         civilizations.add(civilization);
         planet_attributes.put("civilizations", civilizations);
@@ -49,7 +49,7 @@ public class PlanetAgent extends Agent
     
     
     
-    private double resource = 100.0;
+    private double resource = 80.0;
     //private List<Resource> resources;
     
     protected void setup()
