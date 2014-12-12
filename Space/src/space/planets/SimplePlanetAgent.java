@@ -11,15 +11,19 @@ import java.util.List;
 import java.util.Map;
 import space.*;
 
-public class PlanetAgent extends Agent
+public class SimplePlanetAgent extends Agent
 {
     private Map<String, Object> planet;
-    private Map<String, MessageHandler> messageHandlers;
+    private ACLMessageHandler msgHandler;
     
     private void messageHandlersInitialization()
     {
-        messageHandlers = new HashMap<>();
-        messageHandlers.put(KeyBuilder.build("coordinates"), null);
+        KeyValueList list = new KeyValueList("type");
+        KeyBuilder keyBuilder = new KeyBuilder(list);
+        Map<String, MessageHandler> messageHandlers = new HashMap<>();
+//        list.setValue("type", "text");
+//        messageHandlers.put(KeyBuilder.build(list), new TextMassageHandler());
+        msgHandler = new SimpleACLMessageHandler(keyBuilder, messageHandlers);
     }
     
     private void planetInitialization()
@@ -28,16 +32,16 @@ public class PlanetAgent extends Agent
 
         planet.put("name", getLocalName());
 
-        Map<String, VariableDouble> resources = new HashMap<>();
-        resources.put("energy.current_value", new VariableDouble(100));
-        resources.put("energy.max_value", new VariableDouble(200));
+        Map<String, Object> resources = new HashMap<>();
+        resources.put("energy.current_value", new Variable<>(100.0));
+        resources.put("energy.max_value", new Variable<>(200.0));
         planet.put("resources", resources);
 
         List<Object> civilizations = new ArrayList<>();
         Map<String, Object> civilization = new HashMap<>();
         civilization.put("name", "PGH1");
-        civilization.put("number", new VariableDouble(100));
-        civilization.put("birth_rate", new VariableDouble(0.001));
+        civilization.put("number", new Variable<>(100.0));
+        civilization.put("birth_rate", new Variable<>(0.001));
         civilizations.add(civilization);
 
         planet.put("civilizations", civilizations);
@@ -101,7 +105,7 @@ public class PlanetAgent extends Agent
         addBehaviour(new LoadBehaviour());
         addBehaviour(new CivilizationsBehaviour(planet));
         addBehaviour(new ResourceBehaviour(planet));
-        addBehaviour(new ReceiverBehaviour(messageHandlers));
+        addBehaviour(new ReceiverBehaviour(msgHandler));
         servicesRegistration();
     }
 

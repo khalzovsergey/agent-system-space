@@ -15,26 +15,6 @@ import space.MessageHandler;
  */
 public class TextMassageHandler implements MessageHandler
 {
-    public void Invoke(ACLMessage msg)
-    {
-        Map<String, Object> message = null;
-        try
-        {
-            message = (Map<String, Object>)msg.getContentObject();
-        }
-        catch (Exception e)
-        {
-        }
-        if (message != null)
-        {
-            StringBuilder str = new StringBuilder();
-            str = str.append(msg.getSender().getLocalName());
-            str = str.append(": ");
-            str = str.append(getString(message.get("content")));
-            System.out.println(str.toString());
-        }
-    }
-    
     private String getString(Object obj)
     {
         String result;
@@ -47,5 +27,14 @@ public class TextMassageHandler implements MessageHandler
             result = obj.toString();
         }
         return result;
+    }
+
+    public void Invoke(ACLMessage msg, Map<String, Object> content)
+    {
+        StringBuilder str = new StringBuilder();
+        str = str.append(msg.getSender().getLocalName());
+        str = str.append(": ");
+        str = str.append(getString(content.get("content")));
+        System.out.println(str.toString());
     }
 }

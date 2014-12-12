@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import space.Scheduler;
-import space.VariableDouble;
+import space.Variable;
 
 /**
  *
@@ -26,8 +26,8 @@ import space.VariableDouble;
 public class CivilizationsBehaviour extends Behaviour
 {
     private Map<String, Object> planet;
-    private VariableDouble count;
-    private VariableDouble increment;
+    private Variable<Double> count;
+    private Variable<Double> increment;
     private int delay = 2000;
     private Scheduler scheduler;
 
@@ -36,8 +36,8 @@ public class CivilizationsBehaviour extends Behaviour
         this.planet = planet;
         List<Object> civilizations = (List<Object>)planet.get("civilizations");
         Map<String, Object> civilization = (Map<String, Object>)civilizations.get(0);
-        count = (VariableDouble)civilization.get("number");
-        increment = (VariableDouble)civilization.get("birth_rate");
+        count = (Variable<Double>)civilization.get("number");
+        increment = (Variable<Double>)civilization.get("birth_rate");
         scheduler = new Scheduler();
     }
     

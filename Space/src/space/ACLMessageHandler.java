@@ -3,22 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package space.ships;
+package space;
 
-import jade.core.Agent;
+import jade.lang.acl.ACLMessage;
 
 /**
  *
  * @author Sergey
  */
-public class ShipAgent extends Agent
+public interface ACLMessageHandler
 {
-    protected void setup()
-    {
-    }
-    
-    protected void takeDown()
-    {
-        System.exit(0);
-    }
+    public void Invoke(ACLMessage msg);
 }

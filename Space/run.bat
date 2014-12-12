@@ -5,4 +5,4 @@ start Monitor.bat
 timeout /t 3 /nobreak
 start Mars.bat
 timeout /t 2 /nobreak
-start Jupiter.bat
+start Earth.bat

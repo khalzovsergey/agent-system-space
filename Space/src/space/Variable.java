@@ -12,4 +12,13 @@ package space;
 public class Variable<T>
 {
     public T value;
+    
+    public Variable()
+    {
+    }
+    
+    public Variable(T value)
+    {
+        this.value = value;
+    }
 }

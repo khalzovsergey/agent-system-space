@@ -3,33 +3,37 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package space.monitors;
+package space.ships;
 
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
-import jade.wrapper.AgentContainer;
-import jade.wrapper.AgentController;
 import java.util.HashMap;
 import java.util.Map;
+import space.ACLMessageHandler;
 import space.KeyBuilder;
+import space.KeyValueList;
 import space.MessageHandler;
-import space.ReceiverBehaviour;
+import space.SimpleACLMessageHandler;
 
 /**
  *
  * @author Sergey
  */
-public class MonitorAgent extends Agent
+public class SimpleShipAgent extends Agent
 {
-    private Map<String, MessageHandler> messageHandlers;
+    private ACLMessageHandler msgHandler;
 
     private void messageHandlersInitialization()
     {
-        messageHandlers = new HashMap<>();
-        messageHandlers.put(KeyBuilder.build("text"), new TextMassageHandler());
+        KeyValueList list = new KeyValueList("type");
+        KeyBuilder keyBuilder = new KeyBuilder(list);
+        Map<String, MessageHandler> messageHandlers = new HashMap<>();
+//        list.setValue("type", "text");
+//        messageHandlers.put(KeyBuilder.build(list), new TextMassageHandler());
+        msgHandler = new SimpleACLMessageHandler(keyBuilder, messageHandlers);
     }
 
     private void servicesRegistration()
@@ -38,8 +42,8 @@ public class MonitorAgent extends Agent
         dfd.setName(getAID());
 
         ServiceDescription sd = new ServiceDescription();
-        sd.setType("monitor");
-        sd.setName(KeyBuilder.build(getLocalName(), "monitor"));
+        sd.setType("getCoordinates");
+        sd.setName(KeyBuilder.build(getLocalName(), "getCoordinates"));
         dfd.addServices(sd);
 
         try
@@ -64,15 +68,26 @@ public class MonitorAgent extends Agent
 
     private void initialization()
     {
-        //Object[] args = this.getArguments();
+//        Object[] args = this.getArguments();
+//        if (args != null)
+//        {
+//            //jade.Boot
+//            System.out.println("\n\n\n");
+//            System.out.println(args.length);
+//            System.out.println("\n\n\n");
+//            if (args.length > 0)
+//            {
+//                System.out.println(args[0].toString());
+//            }
+//            System.out.println("\n\n\n");
+//        }
     }
     
     protected void setup()
     {
         initialization();
         messageHandlersInitialization();
-        addBehaviour(new ReceiverBehaviour(messageHandlers));
-        addBehaviour(new RequestBehaviour());
+        addBehaviour(new ReceiverBehaviour(msgHandler));
         servicesRegistration();
     }
 
@@ -81,36 +96,4 @@ public class MonitorAgent extends Agent
         servicesDeregistration();
         System.exit(0);
     }
-
-//    public void createNewAgent()
-//    {
-//        String name = "Alice";
-//        AgentContainer c = getContainerController();
-//        try
-//        {
-//            AgentController a = c.createNewAgent(name, "Pong", null);
-//            a.start();
-//        }
-//        catch (Exception e)
-//        {
-//        }
-//    }
-    
-//    class AppRunner
-//    {
-//        public void main1(String args[])
-//        {
-//            Runtime r = Runtime.getRuntime();
-//            Process p = null;
-//            String cmd = "notepad";
-//            try
-//            {
-//                p = r.exec(cmd);
-//            }
-//            catch (Exception e)
-//            {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 }

@@ -1,9 +1,4 @@
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import space.KeyBuilder;
-import space.VariableDouble;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -32,25 +27,11 @@ public class NewClass
         //v.value
         //System.currentTimeMillis();
 //        java.util.
-        Object[] str = { null, "hello", "", null, "bdddd" };
-        System.out.println(KeyBuilder.build(str));
-        System.out.println(KeyBuilder.build((Object[]) null));
-         System.out.println(KeyBuilder.build("dd", "ff", "", null));
-        
-        String str1 = "44";
-        String str2 = "44";
-        System.out.println(str1.hashCode());
-        System.out.println(str2.hashCode());
-        
-        Runtime r = Runtime.getRuntime();
-        Process p = null;
-        String cmd = "notepad";
-        try
+        Object[] str = new Object[5];
+        if (str[3] == null)
         {
-            p = r.exec(cmd);
+            System.out.println("hhhhhh");
         }
-        catch (Exception e)
-        {
-        }
+        
     }
 }
