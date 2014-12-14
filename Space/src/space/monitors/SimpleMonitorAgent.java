@@ -14,12 +14,13 @@ import jade.domain.FIPAException;
 //import jade.wrapper.AgentController;
 import java.util.HashMap;
 import java.util.Map;
-import space.ACLMessageHandler;
-import space.KeyBuilder;
-import space.KeyValueList;
-import space.MessageHandler;
-import space.SimpleACLMessageHandler;
-import space.SimpleReceiverBehaviour;
+import space.common.ACLMessageHandler;
+import space.common.KeyBuilder;
+import space.common.KeyValueList;
+import space.common.MessageHandler;
+import space.common.SimpleACLMessageHandler;
+import space.common.SimplePingMH;
+import space.common.SimpleReceiverBehaviour;
 
 /**
  *
@@ -37,7 +38,7 @@ public class SimpleMonitorAgent extends Agent
         list.setValue("type", "text");
         messageHandlers.put(KeyBuilder.build(list), new TextMessageHandler());
         list.setValue("type", "ping");
-        messageHandlers.put(KeyBuilder.build(list), new PingMessageHandler());
+        messageHandlers.put(KeyBuilder.build(list), new SimplePingMH());
         msgHandler = new SimpleACLMessageHandler(keyBuilder, messageHandlers);
     }
 
@@ -62,8 +63,9 @@ public class SimpleMonitorAgent extends Agent
         {
             DFService.register(this, dfd);
         }
-        catch (FIPAException e)
+        catch (Exception e)
         {
+            System.err.println(getLocalName() + ": services not registered.");
         }
     }
 

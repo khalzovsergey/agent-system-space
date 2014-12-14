@@ -12,12 +12,12 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import java.util.HashMap;
 import java.util.Map;
-import space.ACLMessageHandler;
-import space.KeyBuilder;
-import space.KeyValueList;
-import space.MessageHandler;
-import space.SimpleACLMessageHandler;
-import space.SimpleReceiverBehaviour;
+import space.common.ACLMessageHandler;
+import space.common.KeyBuilder;
+import space.common.KeyValueList;
+import space.common.MessageHandler;
+import space.common.SimpleACLMessageHandler;
+import space.common.SimpleReceiverBehaviour;
 
 /**
  *
@@ -51,8 +51,9 @@ public class SimpleShipFactoryAgent extends Agent
         {
             DFService.register(this, dfd);
         }
-        catch (FIPAException e)
+        catch (Exception e)
         {
+            System.err.println(getLocalName() + ": services not registered.");
         }
     }
 

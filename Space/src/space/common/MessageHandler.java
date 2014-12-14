@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package space;
+package space.common;
 
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
@@ -15,5 +15,5 @@ import java.util.Map;
  */
 public interface MessageHandler
 {
-    public void Invoke(Agent agent, ACLMessage msg, Map<String, Object> content);
+    public void Invoke(Agent agent, ACLMessage msg, Map<String, Object> msgContent);
 }

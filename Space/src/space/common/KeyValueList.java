@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package space;
+package space.common;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,11 +39,6 @@ public class KeyValueList
     public Object setValue(String key, Object value)
     {
         return values[valueIndexes.get(key)] = value;
-    }
-    
-    protected String[] getKeys()
-    {
-        return keys;
     }
     
     public String[] getKeysCopy()

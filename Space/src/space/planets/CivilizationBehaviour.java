@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import space.Scheduler;
-import space.Variable;
+import space.common.Scheduler;
+import space.common.Variable;
 
 /**
  *
@@ -38,8 +38,11 @@ public class CivilizationBehaviour extends Behaviour
     private int timer = 0;
     private int period = 10;
     private double coeff_5 = 50.0;
+    private double coeff_6 = 10.0;
+    private double coeff_7 = 20.0;
     private Map<String, Object> createShipMsg;
-
+//    private Variable<Long> time;
+    
     public CivilizationBehaviour(Map<String, Object> planet, Map<String, Object> civilization, long initialDelay)
     {
         this.planet = planet;
@@ -55,7 +58,11 @@ public class CivilizationBehaviour extends Behaviour
         Map<String, Object> content = new HashMap<>();
         content.put("planet", planet);
         content.put("civilization", civilization);
+        content.put("manpower", new Variable<>(coeff_6));
         //content.put("shipType", "passenger_transport");
+        createShipMsg.put("content", content);
+//        time = new Variable<>();
+//        createShipMsg.put("time", time);
     }
     
     private DFAgentDescription[] serviceSearch(String type)
@@ -95,8 +102,9 @@ public class CivilizationBehaviour extends Behaviour
         {
             msg.setContentObject((Serializable)createShipMsg);
         }
-        catch (IOException e)
+        catch (Exception e)
         {
+            System.err.println("Not serialized.");
         }
         msg.addReceiver(shipFactory);
         myAgent.send(msg);
@@ -106,14 +114,16 @@ public class CivilizationBehaviour extends Behaviour
     {
         if (scheduler.mayExecute())
         {
-            if (number.value > 0)
+            if (number.value > coeff_7)
             {
-                if (++timer % period == 0 && resources_value.value > coeff_5)
+                timer = (timer + 1) % period;
+                if (timer == 0 && resources_value.value > coeff_5 && number.value > coeff_6)
                 {
                     AID shipFactory = getShipFactory();
                     if (shipFactory != null)
                     {
                         resources_value.value -= coeff_5;
+                        number.value -= coeff_6;
                         createShip(shipFactory);
                         System.out.println(civilization.get("name").toString()+ ": This civilization has created a ship.");
                     }
@@ -127,6 +137,10 @@ public class CivilizationBehaviour extends Behaviour
                 {
                     number.value /= coeff_4;
                 }
+            }
+            else
+            {
+                //delete this civilization
             }
             System.out.println(civilization.get("name").toString() + ": number = " + number.value);
             scheduler.addDelay(delay);

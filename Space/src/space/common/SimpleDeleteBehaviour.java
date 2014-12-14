@@ -3,36 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package space;
+package space.common;
 
 import jade.core.behaviours.Behaviour;
-import jade.lang.acl.ACLMessage;
 
 /**
  *
  * @author Sergey
  */
-public class SimpleReceiverBehaviour extends Behaviour
+public class SimpleDeleteBehaviour extends Behaviour
 {
-    private ACLMessageHandler msgHandler;
-
-    public SimpleReceiverBehaviour(ACLMessageHandler msgHandler)
+    private String msg;
+    
+    public SimpleDeleteBehaviour(String msg)
     {
-        this.msgHandler = msgHandler;
+        this.msg = msg;
     }
-
+    
     public void action()
     {
-        ACLMessage msg = myAgent.receive();
         if (msg != null)
         {
-            msgHandler.Invoke(myAgent, msg);
+            System.out.println(msg);
         }
-        block();
+        myAgent.doDelete();
     }
 
     public boolean done()
     {
-        return false;
+        return true;
     }
 }

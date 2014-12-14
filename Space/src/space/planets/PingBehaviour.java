@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package space.monitors;
+package space.planets;
 
 import jade.core.behaviours.Behaviour;
 import jade.domain.DFService;
@@ -21,18 +21,16 @@ import space.common.Scheduler;
  *
  * @author Sergey
  */
-public class RequestBehaviour extends Behaviour
+public class PingBehaviour extends Behaviour
 {
     private int delay = 3000;
-    private Scheduler scheduler = new Scheduler();
-    private Map<String, Object> getCoordinatesMsg;
-
-    public RequestBehaviour()
+    private Scheduler scheduler;
+    
+    public PingBehaviour()
     {
-        getCoordinatesMsg = new HashMap<>();
-        getCoordinatesMsg.put("type", "getCoordinates");
+        scheduler = new Scheduler();
     }
-
+    
     private DFAgentDescription[] serviceSearch(String type)
     {
         DFAgentDescription dfd = new DFAgentDescription();
@@ -50,25 +48,32 @@ public class RequestBehaviour extends Behaviour
         }
         return result;
     }
-
+    
     public void action()
     {
         if (scheduler.mayExecute())
         {
-            DFAgentDescription[] coordinatesServices = serviceSearch("getCoordinates");
-            if (coordinatesServices != null)
+            DFAgentDescription[] monitors = serviceSearch("ping");
+            if (monitors != null)
             {
                 ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
+                Map<String, Object> message = new HashMap<>();
+                message.put("type", "ping");
+                message.put("message_type", "request");
+                message.put("time", System.currentTimeMillis());
                 try
                 {
-                    msg.setContentObject((Serializable)getCoordinatesMsg);
+                    msg.setContentObject((Serializable)message);
                 }
                 catch (IOException e)
                 {
                 }
-                for (DFAgentDescription tmp : coordinatesServices)
+                for (DFAgentDescription tmp : monitors)
                 {
-                    msg.addReceiver(tmp.getName());
+                    if (!tmp.getName().equals(myAgent.getAID()))
+                    {
+                        msg.addReceiver(tmp.getName());
+                    }
                 }
                 myAgent.send(msg);
             }

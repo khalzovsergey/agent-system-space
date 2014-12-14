@@ -67,6 +67,7 @@ public class LoadBehaviour extends Behaviour
             msg = new ACLMessage(ACLMessage.UNKNOWN);
             message = new HashMap<>();
             message.put("type", "ping");
+            message.put("message_type", "request");
             message.put("time", System.currentTimeMillis());
             try
             {

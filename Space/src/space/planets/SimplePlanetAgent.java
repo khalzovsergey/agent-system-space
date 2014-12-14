@@ -1,16 +1,22 @@
 package space.planets;
 
+import space.common.SimpleReceiverBehaviour;
+import space.common.Variable;
+import space.common.KeyBuilder;
+import space.common.SimpleACLMessageHandler;
+import space.common.KeyValueList;
+import space.common.MessageHandler;
+import space.common.ACLMessageHandler;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import space.*;
+import space.common.SimplePingMH;
 
 public class SimplePlanetAgent extends Agent
 {
@@ -25,8 +31,8 @@ public class SimplePlanetAgent extends Agent
         Map<String, MessageHandler> messageHandlers = new HashMap<>();
 //        list.setValue("type", "text");
 //        messageHandlers.put(KeyBuilder.build(list), new TextMassageHandler());
-        list.setValue("type", "pingReply");
-        messageHandlers.put(KeyBuilder.build(list), new PingReplyMessageHandler());
+        list.setValue("type", "ping");
+        messageHandlers.put(KeyBuilder.build(list), new SimplePingMH());
         msgHandler = new SimpleACLMessageHandler(keyBuilder, messageHandlers);
     }
     
@@ -88,13 +94,20 @@ public class SimplePlanetAgent extends Agent
         sd.setType(type);
         sd.setName(KeyBuilder.build(getLocalName(), type));
         dfd.addServices(sd);
+        
+        sd = new ServiceDescription();
+        type = "ping";
+        sd.setType(type);
+        sd.setName(KeyBuilder.build(getLocalName(), type));
+        dfd.addServices(sd);
 
         try
         {
             DFService.register(this, dfd);
         }
-        catch (FIPAException e)
+        catch (Exception e)
         {
+            System.err.println(getLocalName() + ": services not registered.");
         }
     }
 
@@ -129,6 +142,7 @@ public class SimplePlanetAgent extends Agent
         }
         addBehaviour(new SimpleReceiverBehaviour(msgHandler));
         addBehaviour(new MovingBehaviour(planet));
+        //addBehaviour(new PingBehaviour());
         servicesRegistration();
     }
 

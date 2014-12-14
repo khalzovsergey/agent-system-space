@@ -13,12 +13,13 @@ import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import java.util.HashMap;
 import java.util.Map;
-import space.ACLMessageHandler;
-import space.KeyBuilder;
-import space.KeyValueList;
-import space.MessageHandler;
-import space.SimpleACLMessageHandler;
-import space.SimpleReceiverBehaviour;
+import space.common.ACLMessageHandler;
+import space.common.KeyBuilder;
+import space.common.KeyValueList;
+import space.common.MessageHandler;
+import space.common.SimpleACLMessageHandler;
+import space.common.SimpleDeleteBehaviour;
+import space.common.SimpleReceiverBehaviour;
 
 /**
  *
@@ -29,12 +30,16 @@ public class SimpleShipAgent extends Agent
     private ACLMessageHandler msgHandler;
     private Map<String, Object> ship;
     
-    private boolean shipInitialization(ACLMessage msg, Map<String, Object> content)
+    private boolean shipInitialization(ACLMessage msg, Map<String, Object> msgContent)
     {
         boolean result = true;
         ship = new HashMap<>();
         ship.put("name", getLocalName());
         ship.put("parent", msg.getSender());
+        Map<String, Object> content = (Map<String, Object>)msgContent.get("content");
+        Map<String, Object> planet = (Map<String, Object>)content.get("planet");
+        //Map<String, Object> civilization = (Map<String, Object>)content.get("civilization");
+        ship.put("coordinates", planet.get("coordinates"));
         return result;
     }
 
@@ -62,8 +67,9 @@ public class SimpleShipAgent extends Agent
         {
             DFService.register(this, dfd);
         }
-        catch (FIPAException e)
+        catch (Exception e)
         {
+            System.err.println(getLocalName() + ": services not registered.");
         }
     }
 
@@ -84,7 +90,6 @@ public class SimpleShipAgent extends Agent
         Object[] args = this.getArguments();
         if (args != null && args.length == 2 && args[0] instanceof ACLMessage && args[1] instanceof Map)
         {
-            System.out.println(getLocalName() + " was created.");
             result = shipInitialization((ACLMessage)args[0], (Map<String, Object>)args[1]);
         }
         return result;
@@ -94,6 +99,7 @@ public class SimpleShipAgent extends Agent
     {
         if (initialization())
         {
+            System.out.println(getLocalName() + " was created.");
             messageHandlersInitialization();
             addBehaviour(new SimpleReceiverBehaviour(msgHandler));
             servicesRegistration();
@@ -101,7 +107,7 @@ public class SimpleShipAgent extends Agent
         else
         {
             String msg = getLocalName() + ": Incorrect creation.";
-            addBehaviour(new DeleteBehaviour(msg));
+            addBehaviour(new SimpleDeleteBehaviour(msg));
         }
     }
 

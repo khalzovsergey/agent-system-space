@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package space;
+package space.common;
 
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
@@ -23,20 +23,20 @@ public class SimpleACLMessageHandler implements ACLMessageHandler
     
     public void Invoke(Agent agent, ACLMessage msg)
     {
-        Map<String, Object> content = null;
+        Map<String, Object> msgContent = null;
         try
         {
-            content = (Map<String, Object>)msg.getContentObject();
+            msgContent = (Map<String, Object>)msg.getContentObject();
         }
         catch (Exception e)
         {
         }
-        if (content != null)
+        if (msgContent != null)
         {
-            MessageHandler handler = messageHandlers.get(keyBuilder.build(content));
+            MessageHandler handler = messageHandlers.get(keyBuilder.build(msgContent));
             if (handler != null)
             {
-                handler.Invoke(agent, msg, content);
+                handler.Invoke(agent, msg, msgContent);
             }
         }
     }

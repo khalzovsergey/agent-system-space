@@ -7,8 +7,8 @@ package space.planets;
 
 import jade.core.behaviours.Behaviour;
 import java.util.Map;
-import space.Scheduler;
-import space.Variable;
+import space.common.Scheduler;
+import space.common.Variable;
 
 /**
  *

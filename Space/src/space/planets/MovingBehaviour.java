@@ -7,8 +7,8 @@ package space.planets;
 
 import jade.core.behaviours.Behaviour;
 import java.util.Map;
-import space.Scheduler;
-import space.Variable;
+import space.common.Scheduler;
+import space.common.Variable;
 
 /**
  *
@@ -24,6 +24,8 @@ public class MovingBehaviour extends Behaviour
     private Variable<Double> angular_velocity;
     private double r;
     private double phi;
+    private int timer = 0;
+    private int period = 20;
 
     public MovingBehaviour(Map<String, Object> planet)
     {
@@ -45,7 +47,11 @@ public class MovingBehaviour extends Behaviour
             phi += angular_velocity.value * (double)delay / 1000.0;
             x.value = r * Math.cos(phi);
             y.value = r * Math.sin(phi);
-            System.out.println("x = " + x.value.toString() + " y = " + y.value.toString());
+            timer = (timer + 1) % period;
+            if (timer == 0)
+            {
+                System.out.println("x = " + x.value.toString() + " y = " + y.value.toString());
+            }
             scheduler.addDelay(delay);
         }
         scheduler.block(this);

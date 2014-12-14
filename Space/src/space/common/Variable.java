@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package space;
+package space.common;
+
+import java.io.Serializable;
 
 /**
  *
  * @author Sergey
  */
-public class Variable<T>
+public class Variable<T> implements Serializable
 {
     public T value;
     

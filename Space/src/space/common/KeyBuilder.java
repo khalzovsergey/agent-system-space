@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package space;
+package space.common;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,17 +51,17 @@ public class KeyBuilder
     
     public KeyBuilder(KeyValueList list)
     {
-        keys = list.getKeys();
+        keys = list.getKeysCopy();
     }
     
-    public String build(Map<String, Object> content)
+    public String build(Map<String, Object> msgContent)
     {
         StringBuilder result = new StringBuilder();
         String str;
         Object value;
         for (String key : keys)
         {
-            value = content.get(key);
+            value = msgContent.get(key);
             if (value == null)
             {
                 str = "";
