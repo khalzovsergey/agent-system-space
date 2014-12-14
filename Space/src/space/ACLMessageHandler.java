@@ -5,6 +5,7 @@
  */
 package space;
 
+import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 
 /**
@@ -13,5 +14,5 @@ import jade.lang.acl.ACLMessage;
  */
 public interface ACLMessageHandler
 {
-    public void Invoke(ACLMessage msg);
+    public void Invoke(Agent agent, ACLMessage msg);
 }

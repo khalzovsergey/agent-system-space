@@ -10,6 +10,7 @@ import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
 import java.util.HashMap;
 import java.util.Map;
 import space.ACLMessageHandler;
@@ -17,6 +18,7 @@ import space.KeyBuilder;
 import space.KeyValueList;
 import space.MessageHandler;
 import space.SimpleACLMessageHandler;
+import space.SimpleReceiverBehaviour;
 
 /**
  *
@@ -25,6 +27,16 @@ import space.SimpleACLMessageHandler;
 public class SimpleShipAgent extends Agent
 {
     private ACLMessageHandler msgHandler;
+    private Map<String, Object> ship;
+    
+    private boolean shipInitialization(ACLMessage msg, Map<String, Object> content)
+    {
+        boolean result = true;
+        ship = new HashMap<>();
+        ship.put("name", getLocalName());
+        ship.put("parent", msg.getSender());
+        return result;
+    }
 
     private void messageHandlersInitialization()
     {
@@ -66,29 +78,31 @@ public class SimpleShipAgent extends Agent
         }
     }
 
-    private void initialization()
+    private boolean initialization()
     {
-//        Object[] args = this.getArguments();
-//        if (args != null)
-//        {
-//            //jade.Boot
-//            System.out.println("\n\n\n");
-//            System.out.println(args.length);
-//            System.out.println("\n\n\n");
-//            if (args.length > 0)
-//            {
-//                System.out.println(args[0].toString());
-//            }
-//            System.out.println("\n\n\n");
-//        }
+        boolean result = false;
+        Object[] args = this.getArguments();
+        if (args != null && args.length == 2 && args[0] instanceof ACLMessage && args[1] instanceof Map)
+        {
+            System.out.println(getLocalName() + " was created.");
+            result = shipInitialization((ACLMessage)args[0], (Map<String, Object>)args[1]);
+        }
+        return result;
     }
     
     protected void setup()
     {
-        initialization();
-        messageHandlersInitialization();
-        addBehaviour(new ReceiverBehaviour(msgHandler));
-        servicesRegistration();
+        if (initialization())
+        {
+            messageHandlersInitialization();
+            addBehaviour(new SimpleReceiverBehaviour(msgHandler));
+            servicesRegistration();
+        }
+        else
+        {
+            String msg = getLocalName() + ": Incorrect creation.";
+            addBehaviour(new DeleteBehaviour(msg));
+        }
     }
 
     protected void takeDown()

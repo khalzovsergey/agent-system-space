@@ -19,6 +19,7 @@ import space.KeyBuilder;
 import space.KeyValueList;
 import space.MessageHandler;
 import space.SimpleACLMessageHandler;
+import space.SimpleReceiverBehaviour;
 
 /**
  *
@@ -34,7 +35,9 @@ public class SimpleMonitorAgent extends Agent
         KeyBuilder keyBuilder = new KeyBuilder(list);
         Map<String, MessageHandler> messageHandlers = new HashMap<>();
         list.setValue("type", "text");
-        messageHandlers.put(KeyBuilder.build(list), new TextMassageHandler());
+        messageHandlers.put(KeyBuilder.build(list), new TextMessageHandler());
+        list.setValue("type", "ping");
+        messageHandlers.put(KeyBuilder.build(list), new PingMessageHandler());
         msgHandler = new SimpleACLMessageHandler(keyBuilder, messageHandlers);
     }
 
@@ -44,8 +47,15 @@ public class SimpleMonitorAgent extends Agent
         dfd.setName(getAID());
 
         ServiceDescription sd = new ServiceDescription();
-        sd.setType("monitor");
-        sd.setName(KeyBuilder.build(getLocalName(), "monitor"));
+        String type = "monitor";
+        sd.setType(type);
+        sd.setName(KeyBuilder.build(getLocalName(), type));
+        dfd.addServices(sd);
+        
+        sd = new ServiceDescription();
+        type = "ping";
+        sd.setType(type);
+        sd.setName(KeyBuilder.build(getLocalName(), type));
         dfd.addServices(sd);
 
         try
@@ -89,7 +99,7 @@ public class SimpleMonitorAgent extends Agent
     {
         initialization();
         messageHandlersInitialization();
-        addBehaviour(new ReceiverBehaviour(msgHandler));
+        addBehaviour(new SimpleReceiverBehaviour(msgHandler));
         addBehaviour(new RequestBehaviour());
         servicesRegistration();
     }

@@ -7,6 +7,8 @@ package space.ships;
 
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
+import jade.wrapper.AgentContainer;
+import jade.wrapper.AgentController;
 import java.util.Map;
 import space.MessageHandler;
 
@@ -16,29 +18,17 @@ import space.MessageHandler;
  */
 public class SimpleShipFactoryMH implements MessageHandler
 {
-    private Agent myAgent;
-    
-    public SimpleShipFactoryMH(Agent agent)
+    public void Invoke(Agent agent, ACLMessage msg, Map<String, Object> content)
     {
-        myAgent = agent;
+        String name = msg.getSender().getLocalName() + "_Ship_" + content.get("time").toString();
+        AgentContainer c = agent.getContainerController();
+        try
+        {
+            AgentController a = c.createNewAgent(name, SimpleShipAgent.class.getName(), new Object[] { msg, content });
+            a.start();
+        }
+        catch (Exception e)
+        {
+        }
     }
-    
-    public void Invoke(ACLMessage msg, Map<String, Object> content)
-    {
-        
-    }
-    
-//    public void createNewAgent()
-//    {
-//        String name = "Alice";
-//        AgentContainer c = getContainerController();
-//        try
-//        {
-//            AgentController a = c.createNewAgent(name, "Pong", null);
-//            a.start();
-//        }
-//        catch (Exception e)
-//        {
-//        }
-//    }
 }

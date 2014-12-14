@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package space.ships;
+package space;
 
-import space.*;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -13,11 +12,11 @@ import jade.lang.acl.ACLMessage;
  *
  * @author Sergey
  */
-public class ReceiverBehaviour extends Behaviour
+public class SimpleReceiverBehaviour extends Behaviour
 {
     private ACLMessageHandler msgHandler;
 
-    public ReceiverBehaviour(ACLMessageHandler msgHandler)
+    public SimpleReceiverBehaviour(ACLMessageHandler msgHandler)
     {
         this.msgHandler = msgHandler;
     }
@@ -27,7 +26,7 @@ public class ReceiverBehaviour extends Behaviour
         ACLMessage msg = myAgent.receive();
         if (msg != null)
         {
-            msgHandler.Invoke(msg);
+            msgHandler.Invoke(myAgent, msg);
         }
         block();
     }

@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import space.*;
 
 public class SimplePlanetAgent extends Agent
 {
     private Map<String, Object> planet;
+    private List<Map<String, Object>> civilizations;
     private ACLMessageHandler msgHandler;
     
     private void messageHandlersInitialization()
@@ -23,6 +25,8 @@ public class SimplePlanetAgent extends Agent
         Map<String, MessageHandler> messageHandlers = new HashMap<>();
 //        list.setValue("type", "text");
 //        messageHandlers.put(KeyBuilder.build(list), new TextMassageHandler());
+        list.setValue("type", "pingReply");
+        messageHandlers.put(KeyBuilder.build(list), new PingReplyMessageHandler());
         msgHandler = new SimpleACLMessageHandler(keyBuilder, messageHandlers);
     }
     
@@ -33,15 +37,24 @@ public class SimplePlanetAgent extends Agent
         planet.put("name", getLocalName());
 
         Map<String, Object> resources = new HashMap<>();
-        resources.put("energy.current_value", new Variable<>(100.0));
-        resources.put("energy.max_value", new Variable<>(200.0));
+        resources.put("value", new Variable<>(1000.0));
+        resources.put("max", new Variable<>(2000.0));
         planet.put("resources", resources);
+        
+        Map<String, Object> coordinates = new HashMap<>();
+        coordinates.put("x", new Variable<>(2000.0));
+        coordinates.put("y", new Variable<>(2000.0));
+        planet.put("coordinates", coordinates);
+        
+        Map<String, Object> velocities = new HashMap<>();
+        velocities.put("angular_velocity", new Variable<>(Math.PI / 180.0));
+        planet.put("velocities", velocities);
 
-        List<Object> civilizations = new ArrayList<>();
+        civilizations = new ArrayList<>();
         Map<String, Object> civilization = new HashMap<>();
-        civilization.put("name", "PGH1");
-        civilization.put("number", new Variable<>(100.0));
-        civilization.put("birth_rate", new Variable<>(0.001));
+        civilization.put("name", "Earthmen");
+        civilization.put("number", new Variable<>(1000.0));
+//        civilization.put("birth_rate", new Variable<>(0.001));
         civilizations.add(civilization);
 
         planet.put("civilizations", civilizations);
@@ -53,23 +66,27 @@ public class SimplePlanetAgent extends Agent
         dfd.setName(getAID());
 
         ServiceDescription sd = new ServiceDescription();
-        sd.setType("getCoordinates");
-        sd.setName(KeyBuilder.build(getLocalName(), "getCoordinates"));
+        String type = "getCoordinates";
+        sd.setType(type);
+        sd.setName(KeyBuilder.build(getLocalName(), type));
         dfd.addServices(sd);
 
         sd = new ServiceDescription();
-        sd.setType("getResources");
-        sd.setName(KeyBuilder.build(getLocalName(), "getResources"));
+        type = "getResources";
+        sd.setType(type);
+        sd.setName(KeyBuilder.build(getLocalName(), type));
         dfd.addServices(sd);
         
         sd = new ServiceDescription();
-        sd.setType("getCivilizations");
-        sd.setName(KeyBuilder.build(getLocalName(), "getCivilizations"));
+        type = "getCivilizations";
+        sd.setType(type);
+        sd.setName(KeyBuilder.build(getLocalName(), type));
         dfd.addServices(sd);
         
         sd = new ServiceDescription();
-        sd.setType("getPlanet");
-        sd.setName(KeyBuilder.build(getLocalName(), "getPlanet"));
+        type = "getPlanet";
+        sd.setType(type);
+        sd.setName(KeyBuilder.build(getLocalName(), type));
         dfd.addServices(sd);
 
         try
@@ -103,9 +120,15 @@ public class SimplePlanetAgent extends Agent
         planetInitialization();
         messageHandlersInitialization();
         addBehaviour(new LoadBehaviour());
-        addBehaviour(new CivilizationsBehaviour(planet));
-        addBehaviour(new ResourceBehaviour(planet));
-        addBehaviour(new ReceiverBehaviour(msgHandler));
+        addBehaviour(new ResourcesBehaviour(planet));
+        Random r = new Random(System.currentTimeMillis());
+        int maxDelay = 1000;
+        for (Map<String, Object> civilization : civilizations)
+        {
+            addBehaviour(new CivilizationBehaviour(planet, civilization, r.nextInt() % maxDelay));
+        }
+        addBehaviour(new SimpleReceiverBehaviour(msgHandler));
+        addBehaviour(new MovingBehaviour(planet));
         servicesRegistration();
     }
 

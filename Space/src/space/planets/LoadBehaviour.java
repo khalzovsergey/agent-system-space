@@ -63,6 +63,23 @@ public class LoadBehaviour extends Behaviour
                 msg.addReceiver(tmp.getName());
             }
             myAgent.send(msg);
+            
+            msg = new ACLMessage(ACLMessage.UNKNOWN);
+            message = new HashMap<>();
+            message.put("type", "ping");
+            message.put("time", System.currentTimeMillis());
+            try
+            {
+                msg.setContentObject((Serializable)message);
+            }
+            catch (IOException e)
+            {
+            }
+            for (DFAgentDescription tmp : monitors)
+            {
+                msg.addReceiver(tmp.getName());
+            }
+            myAgent.send(msg);
         }
     }
 

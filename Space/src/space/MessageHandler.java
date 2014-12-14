@@ -5,6 +5,7 @@
  */
 package space;
 
+import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import java.util.Map;
 
@@ -14,5 +15,5 @@ import java.util.Map;
  */
 public interface MessageHandler
 {
-    public void Invoke(ACLMessage msg, Map<String, Object> content);
+    public void Invoke(Agent agent, ACLMessage msg, Map<String, Object> content);
 }

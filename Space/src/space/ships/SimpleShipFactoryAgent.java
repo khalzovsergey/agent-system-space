@@ -17,6 +17,7 @@ import space.KeyBuilder;
 import space.KeyValueList;
 import space.MessageHandler;
 import space.SimpleACLMessageHandler;
+import space.SimpleReceiverBehaviour;
 
 /**
  *
@@ -32,7 +33,7 @@ public class SimpleShipFactoryAgent extends Agent
         KeyBuilder keyBuilder = new KeyBuilder(list);
         Map<String, MessageHandler> messageHandlers = new HashMap<>();
         list.setValue("type", "createShip");
-        messageHandlers.put(KeyBuilder.build(list), new SimpleShipFactoryMH(this));
+        messageHandlers.put(KeyBuilder.build(list), new SimpleShipFactoryMH());
         msgHandler = new SimpleACLMessageHandler(keyBuilder, messageHandlers);
     }
 
@@ -68,26 +69,13 @@ public class SimpleShipFactoryAgent extends Agent
 
     private void initialization()
     {
-//        Object[] args = this.getArguments();
-//        if (args != null)
-//        {
-//            //jade.Boot
-//            System.out.println("\n\n\n");
-//            System.out.println(args.length);
-//            System.out.println("\n\n\n");
-//            if (args.length > 0)
-//            {
-//                System.out.println(args[0].toString());
-//            }
-//            System.out.println("\n\n\n");
-//        }
     }
     
     protected void setup()
     {
         initialization();
         messageHandlersInitialization();
-        addBehaviour(new ReceiverBehaviour(msgHandler));
+        addBehaviour(new SimpleReceiverBehaviour(msgHandler));
         servicesRegistration();
     }
 

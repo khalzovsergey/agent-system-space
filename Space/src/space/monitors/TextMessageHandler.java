@@ -5,6 +5,7 @@
  */
 package space.monitors;
 
+import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import java.util.Map;
 import space.MessageHandler;
@@ -13,7 +14,7 @@ import space.MessageHandler;
  *
  * @author Sergey
  */
-public class TextMassageHandler implements MessageHandler
+public class TextMessageHandler implements MessageHandler
 {
     private String getString(Object obj)
     {
@@ -29,7 +30,7 @@ public class TextMassageHandler implements MessageHandler
         return result;
     }
 
-    public void Invoke(ACLMessage msg, Map<String, Object> content)
+    public void Invoke(Agent agent, ACLMessage msg, Map<String, Object> content)
     {
         StringBuilder str = new StringBuilder();
         str = str.append(msg.getSender().getLocalName());

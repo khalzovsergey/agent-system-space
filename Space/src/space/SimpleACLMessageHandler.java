@@ -5,6 +5,7 @@
  */
 package space;
 
+import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class SimpleACLMessageHandler implements ACLMessageHandler
         this.messageHandlers = messageHandlers;
     }
     
-    public void Invoke(ACLMessage msg)
+    public void Invoke(Agent agent, ACLMessage msg)
     {
         Map<String, Object> content = null;
         try
@@ -35,7 +36,7 @@ public class SimpleACLMessageHandler implements ACLMessageHandler
             MessageHandler handler = messageHandlers.get(keyBuilder.build(content));
             if (handler != null)
             {
-                handler.Invoke(msg, content);
+                handler.Invoke(agent, msg, content);
             }
         }
     }
