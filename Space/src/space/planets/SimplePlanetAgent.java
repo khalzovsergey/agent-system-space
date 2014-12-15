@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import space.common.SimpleKeyBuilder;
 import space.common.SimplePingMH;
 
 public class SimplePlanetAgent extends Agent
@@ -27,12 +28,12 @@ public class SimplePlanetAgent extends Agent
     private void messageHandlersInitialization()
     {
         KeyValueList list = new KeyValueList("type");
-        KeyBuilder keyBuilder = new KeyBuilder(list);
+        KeyBuilder keyBuilder = new SimpleKeyBuilder(list);
         Map<String, MessageHandler> messageHandlers = new HashMap<>();
 //        list.setValue("type", "text");
-//        messageHandlers.put(KeyBuilder.build(list), new TextMassageHandler());
+//        messageHandlers.put(SimpleKeyBuilder.getKey(list), new TextMassageHandler());
         list.setValue("type", "ping");
-        messageHandlers.put(KeyBuilder.build(list), new SimplePingMH());
+        messageHandlers.put(SimpleKeyBuilder.getKey(list), new SimplePingMH());
         msgHandler = new SimpleACLMessageHandler(keyBuilder, messageHandlers);
     }
     
@@ -74,31 +75,31 @@ public class SimplePlanetAgent extends Agent
         ServiceDescription sd = new ServiceDescription();
         String type = "getCoordinates";
         sd.setType(type);
-        sd.setName(KeyBuilder.build(getLocalName(), type));
+        sd.setName(SimpleKeyBuilder.join(getLocalName(), type));
         dfd.addServices(sd);
 
         sd = new ServiceDescription();
         type = "getResources";
         sd.setType(type);
-        sd.setName(KeyBuilder.build(getLocalName(), type));
+        sd.setName(SimpleKeyBuilder.join(getLocalName(), type));
         dfd.addServices(sd);
         
         sd = new ServiceDescription();
         type = "getCivilizations";
         sd.setType(type);
-        sd.setName(KeyBuilder.build(getLocalName(), type));
+        sd.setName(SimpleKeyBuilder.join(getLocalName(), type));
         dfd.addServices(sd);
         
         sd = new ServiceDescription();
         type = "getPlanet";
         sd.setType(type);
-        sd.setName(KeyBuilder.build(getLocalName(), type));
+        sd.setName(SimpleKeyBuilder.join(getLocalName(), type));
         dfd.addServices(sd);
         
         sd = new ServiceDescription();
         type = "ping";
         sd.setType(type);
-        sd.setName(KeyBuilder.build(getLocalName(), type));
+        sd.setName(SimpleKeyBuilder.join(getLocalName(), type));
         dfd.addServices(sd);
 
         try

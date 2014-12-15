@@ -19,6 +19,7 @@ import space.common.KeyValueList;
 import space.common.MessageHandler;
 import space.common.SimpleACLMessageHandler;
 import space.common.SimpleDeleteBehaviour;
+import space.common.SimpleKeyBuilder;
 import space.common.SimpleReceiverBehaviour;
 
 /**
@@ -46,10 +47,10 @@ public class SimpleShipAgent extends Agent
     private void messageHandlersInitialization()
     {
         KeyValueList list = new KeyValueList("type");
-        KeyBuilder keyBuilder = new KeyBuilder(list);
+        KeyBuilder keyBuilder = new SimpleKeyBuilder(list);
         Map<String, MessageHandler> messageHandlers = new HashMap<>();
 //        list.setValue("type", "text");
-//        messageHandlers.put(KeyBuilder.build(list), new TextMassageHandler());
+//        messageHandlers.put(SimpleKeyBuilder.getKey(list), new TextMassageHandler());
         msgHandler = new SimpleACLMessageHandler(keyBuilder, messageHandlers);
     }
 
@@ -60,7 +61,7 @@ public class SimpleShipAgent extends Agent
 
         ServiceDescription sd = new ServiceDescription();
         sd.setType("getCoordinates");
-        sd.setName(KeyBuilder.build(getLocalName(), "getCoordinates"));
+        sd.setName(SimpleKeyBuilder.join(getLocalName(), "getCoordinates"));
         dfd.addServices(sd);
 
         try

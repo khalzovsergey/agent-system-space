@@ -9,7 +9,6 @@ import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAException;
 import java.util.HashMap;
 import java.util.Map;
 import space.common.ACLMessageHandler;
@@ -17,6 +16,7 @@ import space.common.KeyBuilder;
 import space.common.KeyValueList;
 import space.common.MessageHandler;
 import space.common.SimpleACLMessageHandler;
+import space.common.SimpleKeyBuilder;
 import space.common.SimpleReceiverBehaviour;
 
 /**
@@ -30,10 +30,10 @@ public class SimpleShipFactoryAgent extends Agent
     private void messageHandlersInitialization()
     {
         KeyValueList list = new KeyValueList("type");
-        KeyBuilder keyBuilder = new KeyBuilder(list);
+        KeyBuilder keyBuilder = new SimpleKeyBuilder(list);
         Map<String, MessageHandler> messageHandlers = new HashMap<>();
         list.setValue("type", "createShip");
-        messageHandlers.put(KeyBuilder.build(list), new SimpleShipFactoryMH());
+        messageHandlers.put(SimpleKeyBuilder.getKey(list), new SimpleShipFactoryMH());
         msgHandler = new SimpleACLMessageHandler(keyBuilder, messageHandlers);
     }
 
@@ -44,7 +44,7 @@ public class SimpleShipFactoryAgent extends Agent
 
         ServiceDescription sd = new ServiceDescription();
         sd.setType("createShip");
-        sd.setName(KeyBuilder.build(getLocalName(), "createShip"));
+        sd.setName(SimpleKeyBuilder.join(getLocalName(), "createShip"));
         dfd.addServices(sd);
 
         try

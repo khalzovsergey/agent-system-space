@@ -12,9 +12,9 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import space.common.Scheduler;
 import space.common.Variable;
@@ -25,6 +25,7 @@ import space.common.Variable;
  */
 public class CivilizationBehaviour extends Behaviour
 {
+    private boolean finished = false;
     private Map<String, Object> planet;
     private Map<String, Object> civilization;
     private Variable<Double> number;
@@ -114,6 +115,7 @@ public class CivilizationBehaviour extends Behaviour
     {
         if (scheduler.mayExecute())
         {
+            System.out.println(civilization.get("name").toString() + ": number = " + number.value);
             if (number.value > coeff_7)
             {
                 timer = (timer + 1) % period;
@@ -141,8 +143,14 @@ public class CivilizationBehaviour extends Behaviour
             else
             {
                 //delete this civilization
+                finished = true;
+                List<Object> civilizations = (List<Object>)planet.get("civilizations");
+                if (civilizations != null)
+                {
+                    civilizations.remove(civilization);
+                }
+                System.out.println(civilization.get("name").toString()+ ": This civilization died.");
             }
-            System.out.println(civilization.get("name").toString() + ": number = " + number.value);
             scheduler.addDelay(delay);
         }
         scheduler.block(this);
@@ -150,6 +158,6 @@ public class CivilizationBehaviour extends Behaviour
 
     public boolean done()
     {
-        return false;
+        return finished;
     }
 }

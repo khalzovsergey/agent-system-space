@@ -33,7 +33,7 @@ public class SimpleACLMessageHandler implements ACLMessageHandler
         }
         if (msgContent != null)
         {
-            MessageHandler handler = messageHandlers.get(keyBuilder.build(msgContent));
+            MessageHandler handler = messageHandlers.get(keyBuilder.getKey(msgContent));
             if (handler != null)
             {
                 handler.Invoke(agent, msg, msgContent);
